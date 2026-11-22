@@ -1224,6 +1224,81 @@
       color: #121110;
     }
 
+    .pwd-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pwd-input-wrap .form-control {
+      padding-right: 46px;
+    }
+
+    .pwd-toggle-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .pwd-toggle-btn:hover {
+      color: var(--accent-gold);
+      background: rgba(212, 175, 55, 0.12);
+    }
+
+    .auth-hero-banner {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.14), rgba(229, 169, 60, 0.04));
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .auth-guest-footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+
+    .guest-link-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .guest-link-btn:hover {
+      color: var(--accent-gold);
+    }
+
+    .btn-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(18, 17, 16, 0.3);
+      border-top-color: #121110;
+      border-radius: 50%;
+      animation: spinLoader 0.7s linear infinite;
+    }
+
+    @keyframes spinLoader {
+      to { transform: rotate(360deg); }
+    }
+
     .txn-log-list {
       display: flex;
       flex-direction: column;
@@ -1380,9 +1455,12 @@
             <div style="font-size: 0.76rem; color: var(--text-muted);">โปรไฟล์สมาชิก CRM</div>
             <div style="font-size: 1.05rem; font-weight: 700;" id="crmUserDisplayName">นักชิมผู้มาเยือน (Guest)</div>
           </div>
-          <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
             <span class="tier-badge" id="crmMembershipTier">First Sip</span>
             <span class="points-pill" id="crmPointsBalance">0 แต้ม</span>
+            <button type="button" id="btnCrmLoginPrompt" class="btn btn-ghost-gold btn-sm" style="padding: 4px 10px; font-size: 0.74rem;">
+              เข้าสู่ระบบ
+            </button>
           </div>
         </div>
 
@@ -1612,49 +1690,81 @@
   <div class="modal-backdrop hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
     <div class="modal-box">
       <div class="modal-head">
-        <h3 id="authModalTitle" style="font-size: 1.1rem; font-weight: 700;">สมาชิก Wongrai &amp; สิทธิพิเศษ</h3>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="brand-emblem" style="width: 34px; height: 34px; border-radius: 10px;" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M8 22h8" />
+              <path d="M12 15v7" />
+              <path d="M19 3H5l2 9a5 5 0 0 0 10 0l2-9Z" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="authModalTitle" style="font-size: 1.08rem; font-weight: 700;">สมาชิก Wongrai &amp; สิทธิพิเศษ</h3>
+            <p style="font-size: 0.74rem; color: var(--text-muted);">บันทึก Taste DNA 5 แกนและซิงก์รีวิวเข้า Supabase</p>
+          </div>
+        </div>
         <button type="button" class="modal-close" id="btnCloseAuthModal" aria-label="ปิดหน้าต่าง">✕</button>
       </div>
 
+      <div class="auth-hero-banner">
+        <div style="font-size: 0.8rem; color: #E4DEC8; line-height: 1.5;">
+          <strong style="color: var(--accent-gold);">สิทธิพิเศษสมาชิก Wongrai:</strong> สะสมแต้มจากการเทสรสชาติ เลื่อนระดับ <em>Taster &amp; Connoisseur</em> เพื่อแลกของแกล้มซิกเนเจอร์และสิทธิ์จองโต๊ะโซนพิเศษ
+        </div>
+      </div>
+
       <div class="auth-tabs">
-        <button type="button" class="auth-tab active" data-mode="login">เข้าสู่ระบบ</button>
-        <button type="button" class="auth-tab" data-mode="signup">สมัครสมาชิกใหม่</button>
+        <button type="button" class="auth-tab active" data-mode="login">เข้าสู่ระบบ (Login)</button>
+        <button type="button" class="auth-tab" data-mode="signup">สมัครสมาชิกใหม่ (Register)</button>
       </div>
 
       <form id="authForm" novalidate>
         <div class="form-group" id="signupNameGroup" style="display: none;">
-          <label class="form-label" for="authDisplayName">ชื่อที่ใช้แสดง (Display Name)</label>
-          <input type="text" id="authDisplayName" class="form-control" placeholder="เช่น นักชิมสายควัน" />
+          <label class="form-label" for="authDisplayName">ชื่อที่ใช้แสดง (Display Name) <span class="req">*จำเป็น</span></label>
+          <input type="text" id="authDisplayName" class="form-control" placeholder="เช่น นักชิมสายควัน, คุณเอก" />
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="authEmail">อีเมล</label>
-          <input type="email" id="authEmail" class="form-control" placeholder="you@example.com" required />
+          <label class="form-label" for="authEmail">อีเมล <span class="req">*จำเป็น</span></label>
+          <input type="email" id="authEmail" class="form-control" placeholder="you@example.com" autocomplete="email" required />
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="authPassword">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
-          <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required />
+          <label class="form-label" for="authPassword">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร) <span class="req">*จำเป็น</span></label>
+          <div class="pwd-input-wrap">
+            <input type="password" id="authPassword" class="form-control" placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" class="pwd-toggle-btn" id="btnTogglePassword" aria-label="แสดงหรือซ่อนรหัสผ่าน">แสดง</button>
+          </div>
         </div>
 
         <div id="signupAgeSection" style="display: none;">
           <div class="form-group">
-            <label class="form-label" for="authBirthDate">วันเดือนปีเกิด (ต้องอายุ 20 ปีบริบูรณ์ขึ้นไป)</label>
+            <label class="form-label" for="authBirthDate">วันเดือนปีเกิด (ต้องอายุ 20 ปีบริบูรณ์ขึ้นไป) <span class="req">*จำเป็น</span></label>
             <input type="date" id="authBirthDate" class="form-control" />
           </div>
 
-          <div class="form-group" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.8rem; color: var(--text-muted);">
-            <input type="checkbox" id="authAgeConfirm" style="margin-top: 4px;" />
-            <label for="authAgeConfirm">ข้าพเจ้ายืนยันว่ามีอายุ 20 ปีบริบูรณ์ขึ้นไป และยอมรับการบันทึกโปรไฟล์รสนิยมในระบบ CRM</label>
+          <div class="form-group" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.79rem; color: var(--text-muted);">
+            <input type="checkbox" id="authAgeConfirm" style="margin-top: 4px; accent-color: var(--accent-gold);" />
+            <label for="authAgeConfirm">ข้าพเจ้ายืนยันว่ามีอายุ 20 ปีบริบูรณ์ขึ้นไป และตกลงดื่มอย่างรับผิดชอบตามข้อกำหนดของ Wongrai</label>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.79rem; color: var(--text-muted);">
+            <input type="checkbox" id="authMarketingOptIn" style="margin-top: 4px; accent-color: var(--accent-gold);" checked />
+            <label for="authMarketingOptIn">รับคำแนะนำแก้วใหม่ที่ตรงกับ Taste DNA และสิทธิพิเศษอาหาร/บริการจากร้านพาร์ทเนอร์</label>
           </div>
         </div>
 
-        <div class="error-msg" id="authErrorText" style="margin-bottom: 10px;"></div>
+        <div class="error-msg" id="authErrorText" style="margin-bottom: 12px;"></div>
 
         <button type="submit" id="btnAuthSubmit" class="btn btn-primary" style="width: 100%;">
           เข้าสู่ระบบ
         </button>
       </form>
+
+      <div class="auth-guest-footer">
+        <button type="button" class="guest-link-btn" id="btnContinueAsGuest">
+          เข้าใช้งานต่อแบบผู้เยี่ยมชม (Guest Mode) โดยยังไม่ล็อกอิน
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1686,7 +1796,8 @@
          ====================================================================== */
       const SUPABASE_URL = 'https://oezlowzfvdejoqlbnbaa.supabase.co';
       const SUPABASE_ANON_KEY = 'sb_publishable_zqj38ccn0kwIT7FgvfWmjw_D8s7hSXV';
-      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabaseClient = sbClient;
 
       /* ======================================================================
          2. CUSTOM LUXURY SVG ARTWORK (NO MAP PINS)
@@ -2488,12 +2599,14 @@
       async function handleSessionChange(user) {
         currentUser = user;
         const btnAuth = document.getElementById('btnOpenAuthModal');
+        const btnCrmLogin = document.getElementById('btnCrmLoginPrompt');
         const btnLogout = document.getElementById('btnLogout');
         const pill = document.getElementById('supabaseStatusPill');
         const txt = document.getElementById('supabaseStatusText');
 
         if (user) {
           btnAuth.style.display = 'none';
+          if (btnCrmLogin) btnCrmLogin.style.display = 'none';
           btnLogout.style.display = 'inline-flex';
 
           try {
@@ -2515,6 +2628,19 @@
               crmTaste.malty_crisp = Number(taste.malty_crisp ?? 0.5);
               crmTaste.total_reviews_count = Number(taste.total_reviews_count ?? 0);
             }
+
+            const { data: recentTxns } = await supabaseClient
+              .from('tasting_transactions')
+              .select('id, drink_name, category, weighted_score, created_at')
+              .eq('user_id', user.id)
+              .order('created_at', { ascending: false })
+              .limit(5);
+
+            if (Array.isArray(recentTxns) && recentTxns.length > 0 && txnLogs.length === 0) {
+              recentTxns.reverse().forEach((row) => {
+                recordTxnInspector('tasting_transactions', 'SUPABASE_DB', row);
+              });
+            }
           } catch (err) {
             console.warn('Session profile load fallback:', err);
           }
@@ -2523,6 +2649,7 @@
           txt.textContent = `Supabase Connected • ${userProfile.display_name}`;
         } else {
           btnAuth.style.display = 'inline-flex';
+          if (btnCrmLogin) btnCrmLogin.style.display = 'inline-flex';
           btnLogout.style.display = 'none';
           userProfile = { display_name: 'นักชิมผู้มาเยือน (Guest)', membership_tier: 'First Sip', points_balance: 0 };
           pill.className = 'conn-pill guest';
@@ -2539,12 +2666,40 @@
       let authMode = 'login';
       const authModal = document.getElementById('authModal');
 
-      document.getElementById('btnOpenAuthModal').addEventListener('click', () => {
+      function openAuthModal(defaultMode) {
+        if (defaultMode) {
+          const targetTab = document.querySelector(`.auth-tab[data-mode="${defaultMode}"]`);
+          if (targetTab) targetTab.click();
+        }
+        document.getElementById('authErrorText').classList.remove('visible');
         authModal.classList.remove('hidden');
-      });
+      }
+
+      document.getElementById('btnOpenAuthModal').addEventListener('click', () => openAuthModal('login'));
+      document.getElementById('btnCrmLoginPrompt').addEventListener('click', () => openAuthModal('login'));
 
       document.getElementById('btnCloseAuthModal').addEventListener('click', () => {
         authModal.classList.add('hidden');
+      });
+
+      document.getElementById('btnContinueAsGuest').addEventListener('click', () => {
+        authModal.classList.add('hidden');
+        showToast('เข้าใช้งานในโหมดผู้เยี่ยมชม (Guest Mode) เรียบร้อย');
+      });
+
+      authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) {
+          authModal.classList.add('hidden');
+        }
+      });
+
+      // Show / Hide Password Toggle
+      document.getElementById('btnTogglePassword').addEventListener('click', () => {
+        const pwdInput = document.getElementById('authPassword');
+        const toggleBtn = document.getElementById('btnTogglePassword');
+        const isHidden = pwdInput.type === 'password';
+        pwdInput.type = isHidden ? 'text' : 'password';
+        toggleBtn.textContent = isHidden ? 'ซ่อน' : 'แสดง';
       });
 
       document.querySelectorAll('.auth-tab').forEach((tab) => {
@@ -2555,82 +2710,123 @@
           const isSignup = authMode === 'signup';
           document.getElementById('signupNameGroup').style.display = isSignup ? 'block' : 'none';
           document.getElementById('signupAgeSection').style.display = isSignup ? 'block' : 'none';
-          document.getElementById('btnAuthSubmit').textContent = isSignup ? 'ยืนยันอายุ 20+ และสมัครสมาชิก' : 'เข้าสู่ระบบ';
+          document.getElementById('authPassword').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+          document.getElementById('btnAuthSubmit').textContent = isSignup ? 'สร้างบัญชีสมาชิก Wongrai' : 'เข้าสู่ระบบ';
           document.getElementById('authErrorText').classList.remove('visible');
         });
       });
 
+      function translateAuthError(message) {
+        if (!message) return 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง';
+        const lower = message.toLowerCase();
+        if (lower.includes('invalid login credentials')) return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+        if (lower.includes('email not confirmed')) return 'กรุณายืนยันอีเมลในกล่องจดหมายของคุณก่อนเข้าสู่ระบบ (หรือกดใช้งานแบบ Guest ด้านล่าง)';
+        if (lower.includes('user already registered')) return 'อีเมลนี้ถูกลงทะเบียนไว้แล้ว กรุณาสลับไปที่แท็บเข้าสู่ระบบ';
+        return message;
+      }
+
       document.getElementById('authForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const errBox = document.getElementById('authErrorText');
+        const submitBtn = document.getElementById('btnAuthSubmit');
         errBox.classList.remove('visible');
 
         const email = document.getElementById('authEmail').value.trim();
         const password = document.getElementById('authPassword').value;
 
-        if (!email || password.length < 6) {
-          errBox.textContent = 'กรุณากรอกอีเมลและรหัสผ่านอย่างน้อย 6 ตัวอักษร';
+        if (!email || !email.includes('@')) {
+          errBox.textContent = 'กรุณากรอกรูปแบบอีเมลให้ถูกต้อง';
           errBox.classList.add('visible');
           return;
         }
 
-        if (authMode === 'login') {
-          const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-          if (error) {
-            errBox.textContent = `เข้าสู่ระบบไม่สำเร็จ: ${error.message}`;
-            errBox.classList.add('visible');
-            return;
-          }
-          authModal.classList.add('hidden');
-          showToast('เข้าสู่ระบบสำเร็จ');
-        } else {
-          const birthDateStr = document.getElementById('authBirthDate').value;
-          const ageChecked = document.getElementById('authAgeConfirm').checked;
-          const displayName = document.getElementById('authDisplayName').value.trim() || email.split('@')[0];
+        if (password.length < 6) {
+          errBox.textContent = 'กรุณากรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร';
+          errBox.classList.add('visible');
+          return;
+        }
 
-          if (!birthDateStr || !ageChecked) {
-            errBox.textContent = 'กรุณาระบุวันเกิดและติ๊กยืนยันว่าอายุ 20 ปีบริบูรณ์ขึ้นไป';
-            errBox.classList.add('visible');
-            return;
-          }
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="btn-spinner"></span> กำลังดำเนินการ...`;
 
-          const birth = new Date(birthDateStr);
-          const today = new Date();
-          let age = today.getFullYear() - birth.getFullYear();
-          const mDiff = today.getMonth() - birth.getMonth();
-          if (mDiff < 0 || (mDiff === 0 && today.getDate() < birth.getDate())) age--;
+        try {
+          if (authMode === 'login') {
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+              errBox.textContent = translateAuthError(error.message);
+              errBox.classList.add('visible');
+              return;
+            }
+            authModal.classList.add('hidden');
+            showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับกลับสู่ Wongrai');
+          } else {
+            const birthDateStr = document.getElementById('authBirthDate').value;
+            const ageChecked = document.getElementById('authAgeConfirm').checked;
+            const marketingOptIn = document.getElementById('authMarketingOptIn').checked;
+            const displayName = document.getElementById('authDisplayName').value.trim() || email.split('@')[0];
 
-          if (age < 20) {
-            errBox.textContent = 'ขออภัย เฉพาะผู้ที่มีอายุ 20 ปีบริบูรณ์ขึ้นไปเท่านั้น';
-            errBox.classList.add('visible');
-            return;
-          }
+            if (!birthDateStr || !ageChecked) {
+              errBox.textContent = 'กรุณาระบุวันเดือนปีเกิดและติ๊กยืนยันว่าอายุ 20 ปีบริบูรณ์ขึ้นไป';
+              errBox.classList.add('visible');
+              return;
+            }
 
-          const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: { data: { display_name: displayName } }
-          });
+            const birth = new Date(birthDateStr);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const mDiff = today.getMonth() - birth.getMonth();
+            if (mDiff < 0 || (mDiff === 0 && today.getDate() < birth.getDate())) age--;
 
-          if (error) {
-            errBox.textContent = `สมัครสมาชิกไม่สำเร็จ: ${error.message}`;
-            errBox.classList.add('visible');
-            return;
-          }
+            if (age < 20) {
+              errBox.textContent = 'ขออภัย แพลตฟอร์มนี้สงวนสิทธิ์เฉพาะผู้ที่มีอายุ 20 ปีบริบูรณ์ขึ้นไปเท่านั้น';
+              errBox.classList.add('visible');
+              return;
+            }
 
-          if (data && data.user) {
-            await supabaseClient.from('user_profiles').upsert({
-              id: data.user.id,
-              display_name: displayName,
-              birth_date: birthDateStr,
-              is_age_verified: true,
-              membership_tier: 'First Sip',
-              points_balance: 50
+            const { data, error } = await supabaseClient.auth.signUp({
+              email,
+              password,
+              options: { data: { display_name: displayName } }
             });
-          }
 
-          authModal.classList.add('hidden');
-          showToast('สมัครสมาชิกและยืนยันอายุ 20+ สำเร็จ!');
+            if (error) {
+              errBox.textContent = translateAuthError(error.message);
+              errBox.classList.add('visible');
+              return;
+            }
+
+            if (data && data.user) {
+              await supabaseClient.from('user_profiles').upsert({
+                id: data.user.id,
+                display_name: displayName,
+                birth_date: birthDateStr,
+                is_age_verified: true,
+                marketing_opt_in: marketingOptIn,
+                membership_tier: 'First Sip',
+                points_balance: 50
+              });
+
+              await supabaseClient.from('crm_taste_profiles').upsert({
+                user_id: data.user.id,
+                smoky_peat: crmTaste.smoky_peat,
+                citrus_fresh: crmTaste.citrus_fresh,
+                sweet_herbal: crmTaste.sweet_herbal,
+                bitter_bold: crmTaste.bitter_bold,
+                malty_crisp: crmTaste.malty_crisp
+              });
+            }
+
+            authModal.classList.add('hidden');
+            if (data && !data.session) {
+              showToast('สมัครสมาชิกสำเร็จ! กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชีของคุณ');
+            } else {
+              showToast('สร้างบัญชีสมาชิก Wongrai และรับโบนัสเริ่มต้น +50 แต้มสำเร็จ!');
+            }
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
         }
       });
 
